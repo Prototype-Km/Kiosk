@@ -51,6 +51,9 @@ public class Kiosk {
                 System.out.println("5. Cancel       | 진행중인 주문을 취소합니다.");
             }
             System.out.println("0 . 종료 ");
+            /*================================================*/
+            /*. isFlag true가 아닐때 4,5번 누르면 예외처리 해주기.     */
+            /*================================================*/
             input = sc.nextInt();
 
             if (input == 5) {
@@ -68,7 +71,24 @@ public class Kiosk {
                 input = sc.nextInt();
 
                 if (input == 1) {
-                    System.out.println("주문이 완료되었습니다. 금액은 $ " + cart.getTotalPrice() + "입니다. ");
+
+                    System.out.println("할인 정보를 입력해주세요.");
+                    System.out.println("1. 국가유공자 : 10%\n2. 군인 : 5%\n3. 학생 : 3%\n5. 일반 : 0%");
+                    //할인정보
+                    int discountChoice = sc.nextInt();
+                    double discount = 0.0;
+                    double total = cart.getTotalPrice();
+                    if(discountChoice == 1){
+                         discount = DisCount.NATIONAL_VIP.getDisCountPercent(cart.getTotalPrice());
+                    }else if(discountChoice ==2){
+                         discount = DisCount.SOLDIER.getDisCountPercent(cart.getTotalPrice());
+                    }else if(discountChoice == 3){
+                         discount = DisCount.STUDENT.getDisCountPercent(cart.getTotalPrice());
+                    }
+                    double finalTotal = total -discount;
+                    System.out.println("주문이 완료되었습니다. 총 금액은 $ " + total + "입니다. ");
+                    System.out.println("할인 금액 : "+discount);
+                    System.out.println("할인된 금액 : "+finalTotal);
                     //초기화
                     cart.clear();
                     isFlag = false;
@@ -83,7 +103,6 @@ public class Kiosk {
             //햄버거
             if (input == 1) {
                 while (true) {
-//                        System.out.println(message);
                     System.out.println(line);
                     System.out.printf("%-3s %-15s | W %-4s | %-40s%n", "No", "메뉴", "가격", "설명");
                     System.out.println(line);
@@ -126,6 +145,7 @@ public class Kiosk {
                     }
                 }
             }
+            //drink /*메소드로*/
             if (input == 2) {
                 while (true) {
 //                        System.out.println(message);

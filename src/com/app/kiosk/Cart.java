@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Cart {
     public final List<MenuItem> carts;
-
+    DisCount disCount;
 
     public Cart(){
         this.carts = new ArrayList<>();
@@ -17,6 +17,8 @@ public class Cart {
         return carts;
     }
 
+
+    //할인율 적용한 값
     public double getTotalPrice(){
         double result =0.0;
         for(MenuItem cart: carts){
