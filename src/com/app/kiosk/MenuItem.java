@@ -1,15 +1,22 @@
 package com.app.kiosk;
 
-public class MenuItem {
-    //밖에서 이름 변경 못하게 final로 선언
+public class MenuItem{
+
     private final String name;
     private final double price;
     private final String description;
+    private final Category category;
 
-    public MenuItem(String name, double price, String description) {
+    public MenuItem(String name, double price, String description,Category category) {
         this.name = name;
         this.price = price;
         this.description = description;
+        this.category = category;
+
+    }
+
+    public Category getCategory() {
+        return category;
     }
 
     public String getName() {
@@ -22,5 +29,13 @@ public class MenuItem {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public String toString() {
+        return
+                 name + "\t |" +
+                "  $ " + price + "  | "+
+                 description + '\t';
     }
 }
