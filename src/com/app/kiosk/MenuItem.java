@@ -1,9 +1,10 @@
 package com.app.kiosk;
 
 public class MenuItem {
-    private String name;
-    private double price;
-    private String description;
+    //밖에서 이름 변경 못하게 final로 선언
+    private final String name;
+    private final double price;
+    private final String description;
 
     public MenuItem(String name, double price, String description) {
         this.name = name;
