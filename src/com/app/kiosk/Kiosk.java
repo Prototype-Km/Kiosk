@@ -51,105 +51,22 @@ public class Kiosk {
                 System.out.println("프로그램 종료. ");
                 break;
             }
-            //햄버거
+
+            //-> 카테고리 추가할때 번호도 추가되게 ? ex) 메뉴카테고리 추가되면 메뉴판도 추가
+
+            //햄버거           카테고리 for문으로 -> 1번 받으면 Menu get(i) 넣고, size-1
+                                                // 2번이면 2번  size-1하고 안에 내용돌려서 뽑가
             if (input == 1) {
-                while (true) {
-                    System.out.println(line);
-                    //< 줄이 안맞아서 ,서식 형식은 gpt 사용했음>
-                    System.out.printf("%-3s %-15s | W %-4s | %-40s%n", "No", "메뉴", "가격", "설명");
-                    System.out.println(line);
-                    Menu menu = menus.get(Category.HAMBURGERS.ordinal());
-                    for (int i = 0; i < menu.getMenuItems().size(); i++) {
-                        MenuItem item = menu.getMenuItems().get(i);
-                        System.out.printf("%-3d %-15s | %-5.1f$ | %-40s%n",
-                                (i + 1),
-                                item.getName(),
-                                item.getPrice(),
-                                item.getDescription());
-                    }
-                    System.out.println("5. 이전단계로 돌아가기");
-                    System.out.println(messagePrint);
-
-                    input = sc.nextInt();
-                    if (input == 5) {
-                        break;
-                    }
-                    if (input == 0) {
-                        System.out.println("프로그램을 종료합니다.");
-                        return;
-                    }
-
-                    if (input > 0 && input <= menu.getMenuItems().size()) {
-                        //선택된 버거
-                        MenuItem selectedMenu = menu.getMenuItems().get(input - 1);
-                        System.out.printf(" 이름 : %s \n 가격 : %.1f 달러 \n 설명 : %s\n", selectedMenu.getName(), selectedMenu.getPrice(), selectedMenu.getDescription());
-
-                        System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
-                        System.out.println();
-                        System.out.print("1. 확인 \t2. 취소");
-                        input = sc.nextInt();
-                        if (input == 1) {
-                            cart.addItem(selectedMenu);
-                            System.out.println(selectedMenu.getName() + "이(가) 장바구니에 추가되었습니다.");
-                            isCart = true;
-                            break;
-                        }
-
-                    } else {
-                        System.out.println("다시 입력해주세요");
-                        continue;
-                    }
-                }
+                //
+                isCart = categoryPrint(line,messagePrint,sc,isCart,input);
             }
             // 카테고리 2번째
             if (input == 2) {
-                while (true) {
-                    System.out.println(line);
-                    System.out.printf("%-3s %-15s | W %-4s | %-40s%n", "No", "메뉴", "가격", "설명");
-                    System.out.println(line);
-                    Menu drinkMenu = menus.get(Category.DRINKS.ordinal());
-                    for (int i = 0; i < drinkMenu.getMenuItems().size(); i++) {
-                        MenuItem item= drinkMenu.getMenuItems().get(i);
-                        System.out.printf("%-3d %-15s | %-5.1f$ | %-40s%n",
-                                (i + 1),
-                                item.getName(),
-                                item.getPrice(),
-                                item.getDescription());
-                    }
-                    System.out.println("5. 이전단계로 돌아가기");
-                    System.out.println(messagePrint);
-
-                    input = sc.nextInt();
-                    if (input == 5) {
-                        break;
-                    }
-                    if (input == 0) {
-                        System.out.println("프로그램을 종료합니다.");
-                        return;
-                    }
-
-                    if (input > 0 && input <= drinkMenu.getMenuItems().size()) {
-                        //음료수
-                        MenuItem selectedMenu = drinkMenu.getMenuItems().get(input - 1);
-                        System.out.printf(" 이름 : %s \n 가격 : %.1f 달러 \n 설명 : %s\n", selectedMenu.getName(), selectedMenu.getPrice(), selectedMenu.getDescription());
-
-                        System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
-                        System.out.print("1. 확인 \t2. 취소");
-                        input = sc.nextInt();
-                        if (input == 1) {
-                            cart.addItem(selectedMenu);
-                            System.out.println(selectedMenu.getName() + "이(가) 장바구니에 추가되었습니다.");
-                            isCart = true;
-                            break;
-                        }
-
-                    } else {
-                        System.out.println("다시 입력해주세요");
-                        continue;
-                    }
-                }
+                isCart = categoryPrint(line,messagePrint,sc,isCart,input);
             }
-
+            if (input == 3){
+                isCart = categoryPrint(line,messagePrint,sc,isCart,input);
+            }
             //주문 메뉴
             if (input == 4) {
                 isCart =orderPrint(sc,isCart);
@@ -159,10 +76,11 @@ public class Kiosk {
             if (input == 5) {
                 isCart = false;
                 cart.clear(); //장바구니 삭제
-                continue;
+//                continue;
             }
         }
     }
+
 
     /*========================================================================
      *               print Main 메뉴, 카테고리 출력하기
@@ -184,6 +102,9 @@ public class Kiosk {
         }
         System.out.println("0.      종료");
     }
+    /*========================================================================
+    * ========================================================================*/
+
 
     /*========================================================================
      *               할인 정보 출력, 가격 출력, 주문하면 Order출력안나오게
@@ -205,10 +126,10 @@ public class Kiosk {
             discount = DisCount.STUDENT.getDisCountPercent(cart.getTotalPrice());
         }
 
-        double finalTotal = total -discount;
+        double finalTotal = total - discount;
         System.out.println("주문이 완료되었습니다. 총 금액은 $ " + total + "입니다. ");
         System.out.println("할인 금액 : "+discount);
-        System.out.println("할인된 금액 : "+finalTotal);
+        System.out.printf("할인된 금액 : %.2f\n\n", finalTotal);
         //초기화
         isCart = false;
         cart.clear();
@@ -217,9 +138,14 @@ public class Kiosk {
 //        System.out.println("discountPrint>>>====isCart");
         return isCart;
     }
+    /*========================================================================
+     * ========================================================================*/
 
 
-    /*주문하기 */
+
+    /*========================================================================
+     *               주문하기 출력 ,
+     * ========================================================================*/
     private boolean orderPrint(Scanner sc, boolean isCart){
         while(true) {
             System.out.println("아래와 같이 주문 하시겠습니까?");
@@ -249,8 +175,72 @@ public class Kiosk {
 //        System.out.println(isCart);
         return isCart;
     }
+    /*========================================================================
+     * ========================================================================*/
 
 
+
+    /*========================================================================
+     *                  카테고리별 메뉴 출력하기
+     * ========================================================================*/
+    private boolean categoryPrint(String line,String messagePrint, Scanner sc,boolean isCart,int input) {
+        while (true) {
+            System.out.println(line);
+            //< 줄이 안맞아서 ,서식 형식은 gpt 사용했음>
+            System.out.printf("%-3s %-15s | W %-4s | %-40s%n", "No", "메뉴", "가격", "설명");
+            System.out.println(line);
+
+            //카테고리 input값 받아서  (i)대입  , input -1해줘야함 -> HAMBURGERS -> 0 , DRINKS -> 1
+//            System.out.println("============");
+//            System.out.println(menus.get(input-1).getMenuItems());
+//            System.out.println("============");
+
+            Menu menu = menus.get(input-1);
+            for(int i=0; i< menus.get(input-1).getMenuItems().size(); i++){
+                MenuItem item = menu.getMenuItems().get(i);
+                System.out.printf("%-3d %-15s | %-5.1f$ | %-40s%n",
+                        (i + 1),
+                        item.getName(),
+                        item.getPrice(),
+                        item.getDescription());
+            }
+            System.out.println("5. 이전단계로 돌아가기");
+            System.out.println(messagePrint);
+
+            int choice = sc.nextInt();
+                if (choice == 0) {
+                    System.out.println("프로그램을 종료합니다.");
+                    System.exit(0);
+                }
+                if (choice == 5) {
+                    break;
+                }
+
+            if (choice > 0 && choice <= menu.getMenuItems().size()) {
+                //선택된 카테고리 출력하기
+                MenuItem selectedMenu = menu.getMenuItems().get(input - 1);
+                System.out.printf(" 이름 : %s \n 가격 : %.1f 달러 \n 설명 : %s\n", selectedMenu.getName(), selectedMenu.getPrice(), selectedMenu.getDescription());
+                System.out.println();
+                System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
+                System.out.println();
+                System.out.print("1. 확인 \t2. 취소");
+                choice = sc.nextInt();
+                if (choice == 1) {
+                    cart.addItem(selectedMenu);
+                    System.out.println(selectedMenu.getName() + "이(가) 장바구니에 추가되었습니다.");
+                    isCart = true;
+                    break;
+                }
+
+            } else {
+                System.out.println("다시 입력해주세요");
+                continue;
+            }
+            return isCart;
+        }
+        return isCart;
+    }
+    /*========================================================================
+    * ========================================================================*/
 }
-
 

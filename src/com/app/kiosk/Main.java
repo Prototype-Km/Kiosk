@@ -1,5 +1,6 @@
 package com.app.kiosk;
 
+import javax.lang.model.type.ArrayType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -24,8 +25,16 @@ public class Main {
         drinks.add(new MenuItem("Mint Tea",6.0,"시원한 민트 차",DRINKS));
         drinks.add(new MenuItem("Orange juice",6.0,"오렌지 주스 ",DRINKS));
 
+        List<MenuItem> desserts = new ArrayList<>();
+
+        desserts.add(new MenuItem("CheeseCake", 4.3,"달달한 치즈케잌은 맛있어",DESSERTS));
+        desserts.add(new MenuItem("쿠엔크", 1.3,"초코는 쿠엔크지",DESSERTS));
+        desserts.add(new MenuItem("요아정", 9.3,"요아정",DESSERTS));
+        desserts.add(new MenuItem("피자빵", 3.3,"배고프다",DESSERTS));
+
         Menu burgerList = new Menu(HAMBURGERS);
         Menu drinkList = new Menu(DRINKS);
+        Menu dessertList =new Menu(DESSERTS);
 
         for(MenuItem burger : hamburgers){
             burgerList.addMenuItem(burger);
@@ -33,11 +42,15 @@ public class Main {
         for(MenuItem drink : drinks){
             drinkList.addMenuItem(drink);
         }
+        for(MenuItem dessert : desserts){
+            dessertList.addMenuItem(dessert);
+        }
+
         List<Menu> mainMenu = new ArrayList<>();
         mainMenu.add(burgerList);
         mainMenu.add(drinkList);
-//        Cart cart = new Cart();
-        // 카테고리별
+        mainMenu.add(dessertList);
+
         Kiosk kiosk = new Kiosk(mainMenu);
         kiosk.start();
 
