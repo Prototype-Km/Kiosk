@@ -8,7 +8,7 @@ import java.util.List;
 public class Menu {
 
       private final Category category;
-      private  List<MenuItem> menuItems;
+      private final List<MenuItem> menuItems;
 
 
     public Menu(Category category) {
@@ -16,10 +16,6 @@ public class Menu {
         this.category = category;
         //카테고리 하나 받고, ex) Drink -> 아메리카노, 주스 등 리스트 받기
         this.menuItems = new ArrayList<>();
-    }
-
-    public void setMenuItems(List<MenuItem> menuItems) {
-        this.menuItems = menuItems;
     }
 
     public void addMenuItem(final MenuItem item) {

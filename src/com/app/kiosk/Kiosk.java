@@ -1,8 +1,9 @@
 package com.app.kiosk;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 //메뉴 관리, 사용자 입력 처리
 // MenuItem관리하는 리스트가 필드로 존재
@@ -94,6 +95,8 @@ public class Kiosk {
         for (int i = 0; i < menus.size(); i++) {
             System.out.println((i + 1) + ". " + menus.get(i).getCategory());
         }
+        // stream -> 앞에 1,2,3 출력이 안됌.
+//         menus.stream().forEach(i-> System.out.println(i.getCategory()));
 
         if (isCart) {
             System.out.println("[ORDER MENU]");
@@ -109,10 +112,9 @@ public class Kiosk {
     /*========================================================================
      *               할인 정보 출력, 가격 출력, 주문하면 Order출력안나오게
      * ========================================================================*/
-    private boolean discountPrint(Scanner sc,boolean isCart){
+    private boolean discountPrint(Scanner sc){
         System.out.println("할인 정보를 입력해주세요.");
         System.out.println("1. 국가유공자 : 10%\n2. 군인 : 5%\n3. 학생 : 3%\n5. 일반 : 0%");
-
         //할인정보
         int discountChoice = sc.nextInt();
         double discount = 0.0;
@@ -131,7 +133,7 @@ public class Kiosk {
         System.out.println("할인 금액 : "+discount);
         System.out.printf("할인된 금액 : %.2f\n\n", finalTotal);
         //초기화
-        isCart = false;
+        boolean isCart = false;
         cart.clear();
 //        System.out.println("discountPrint>>>====isCart");
 //        System.out.println(isCart);  // false 출력
@@ -153,13 +155,28 @@ public class Kiosk {
             System.out.println(cart.getCarts());
             System.out.println("[Total]");
             System.out.println("$ " + cart.getTotalPrice());
-            System.out.println("1. 주문 \t2. 메뉴판");
-
+            System.out.println("취소하고 싶은 주문이 있으면 1번을 눌러 주세요 (없으면 아무거나 눌러주세요)");
             int input = sc.nextInt();
 
+            if(input == 1){
+                Scanner in = new Scanner(System.in);
+                System.out.print("삭제할 상품의 이름을 입력해주세요 >>>");
+                String inputOrderName = in.nextLine();
+                    if(cart.findByName(inputOrderName)) {
+                        cart.removeName(inputOrderName);
+                        System.out.println("삭제되었습니다. ");
+                        System.out.println("==주문 목록==");
+                        System.out.println(cart.getCarts());
+                        isCart = cart.getCarts().isEmpty() ? false : true;
+                    }else{
+                    System.out.println("삭제할 상품이 존재하지 않습니다.");
+                    }
+            }
+            System.out.println("1. 주문 \t2. 메뉴판");
+            input = sc.nextInt();
             if (input == 1) {
                 //할인
-                isCart = discountPrint(sc, isCart);
+                isCart = discountPrint(sc);
 //                System.out.println("orderPrint >>>");
 //                System.out.println(isCart);
                 return isCart;
@@ -194,10 +211,10 @@ public class Kiosk {
 //            System.out.println("============");
 //            System.out.println(menus.get(input-1).getMenuItems());
 //            System.out.println("============");
-
+            // 1-1 => 0 햄버거 카테고리
             Menu menu = menus.get(input-1);
-            for(int i=0; i< menus.get(input-1).getMenuItems().size(); i++){
-                MenuItem item = menu.getMenuItems().get(i);
+            for(int i=0; i< menu.getMenuItems().size(); i++){
+                MenuItem item = menu.getMenuItems().get(i); //각 햄버거
                 System.out.printf("%-3d %-15s | %-5.1f$ | %-40s%n",
                         (i + 1),
                         item.getName(),
@@ -218,13 +235,14 @@ public class Kiosk {
 
             if (choice > 0 && choice <= menu.getMenuItems().size()) {
                 //선택된 카테고리 출력하기
-                MenuItem selectedMenu = menu.getMenuItems().get(input - 1);
+                MenuItem selectedMenu = menu.getMenuItems().get(choice - 1);
                 System.out.printf(" 이름 : %s \n 가격 : %.1f 달러 \n 설명 : %s\n", selectedMenu.getName(), selectedMenu.getPrice(), selectedMenu.getDescription());
                 System.out.println();
                 System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
                 System.out.println();
                 System.out.print("1. 확인 \t2. 취소");
                 choice = sc.nextInt();
+
                 if (choice == 1) {
                     cart.addItem(selectedMenu);
                     System.out.println(selectedMenu.getName() + "이(가) 장바구니에 추가되었습니다.");
