@@ -1,5 +1,6 @@
 package com.app.kiosk;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -46,38 +47,62 @@ public class Kiosk {
             /*================================================*/
             /*. isCart true가 아닐때 4,5번 누르면 예외처리 해주기.     */
             /*================================================*/
-            input = sc.nextInt();
+            try {
+                input = sc.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("다시 입력해주세요");
+                continue;
+            }
+
+
             //프로그램 종료
             if (input == 0) {
                 System.out.println("프로그램 종료. ");
                 break;
             }
 
+            // isCart가 false일 때 4, 5번 입력하면 예외 처리
+            if ((input == 4 || input == 5) && !isCart) {
+                System.out.println("주문을 하고 입력해주세요");
+                continue;
+            }
+            // 유효하지 않은 입력 처리 (isCart가 false이면 1~3, true이면 1~5)
+            int validMax = isCart ? 5 : 3;
+            if (input < 0 || input > validMax) {
+                System.out.println("다시 입력해주세요");
+                continue;
+            }
+
             //-> 카테고리 추가할때 번호도 추가되게 ? ex) 메뉴카테고리 추가되면 메뉴판도 추가
 
             //햄버거           카테고리 for문으로 -> 1번 받으면 Menu get(i) 넣고, size-1
-                                                // 2번이면 2번  size-1하고 안에 내용돌려서 뽑가
-            if (input == 1) {
-                //
-                isCart = categoryPrint(line,messagePrint,sc,isCart,input);
-            }
-            // 카테고리 2번째
-            if (input == 2) {
-                isCart = categoryPrint(line,messagePrint,sc,isCart,input);
-            }
-            if (input == 3){
-                isCart = categoryPrint(line,messagePrint,sc,isCart,input);
-            }
-            //주문 메뉴
-            if (input == 4) {
-                isCart =orderPrint(sc,isCart);
-            }
+            try {
+                // 2번이면 2번  size-1하고 안에 내용돌려서 뽑가
+                if (input == 1) {
+                    //
+                    isCart = categoryPrint(line,messagePrint,sc,isCart,input);
+                }
+                // 카테고리 2번째
+                if (input == 2) {
+                    isCart = categoryPrint(line,messagePrint,sc,isCart,input);
+                }
+                if (input == 3){
+                    isCart = categoryPrint(line,messagePrint,sc,isCart,input);
+                }
+                //주문 메뉴
+                if (input == 4) {
+                    isCart =orderPrint(sc,isCart);
+                }
 
-            //주문 취소
-            if (input == 5) {
-                isCart = false;
-                cart.clear(); //장바구니 삭제
-//                continue;
+                //주문 취소
+                if (input == 5) {
+                    isCart = false;
+                    cart.clear(); //장바구니 삭제
+    //                continue;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("다시 입력해주세요.ㄴ");
+                continue;
             }
         }
     }
@@ -167,7 +192,7 @@ public class Kiosk {
                         System.out.println("삭제되었습니다. ");
                         System.out.println("==주문 목록==");
                         System.out.println(cart.getCarts());
-                        isCart = cart.getCarts().isEmpty() ? false : true;
+                        isCart = !cart.getCarts().isEmpty();
                     }else{
                     System.out.println("삭제할 상품이 존재하지 않습니다.");
                     }
