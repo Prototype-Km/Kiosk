@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Kiosk {
 
     private final List<Menu> menus;
-    private Cart cart;
+    private final Cart cart;
 
     public Kiosk(List<Menu> menus) {
         this.menus = menus;
@@ -101,7 +101,7 @@ public class Kiosk {
     //                continue;
                 }
             } catch (InputMismatchException e) {
-                System.out.println("다시 입력해주세요.ㄴ");
+                System.out.println("다시 입력해주세요.");
                 continue;
             }
         }
